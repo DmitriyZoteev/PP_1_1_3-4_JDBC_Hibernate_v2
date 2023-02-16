@@ -20,5 +20,6 @@ public class Main {
         userServiceImpl.cleanUsersTable();
         userServiceImpl.dropUsersTable();
         userServiceImpl.dropUsersTable();
+        userServiceImpl.disconnect();
     }
 }

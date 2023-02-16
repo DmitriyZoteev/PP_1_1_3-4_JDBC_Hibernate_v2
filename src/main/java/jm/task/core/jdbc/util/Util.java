@@ -5,23 +5,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
-    private Connection connection;
-
+    private Connection connection = null;
     public Connection getConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/my_db", "root", "springcourse");
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println("Ошибка установления соединения с базой данных");
+            e.printStackTrace();
+        }
         return connection;
     }
 
+
     public Util() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/my_db", "root", "springcourse");
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 }
