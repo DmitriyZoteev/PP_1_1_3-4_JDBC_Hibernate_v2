@@ -17,10 +17,12 @@ public class Util {
     private static final String Url = "jdbc:mysql://localhost:3306/my_db";
     private static final String User = "root";
     private static final String Password = "springcourse";
-    public Util() {
 
+    public Util() {
     }
+
     private Connection connection = null;
+
     public Connection getConnection() {
         try {
             Class.forName(Driver);
@@ -31,6 +33,7 @@ public class Util {
         }
         return connection;
     }
+
     private SessionFactory sessionFactory;
 
     public SessionFactory getSessionFactory() {
