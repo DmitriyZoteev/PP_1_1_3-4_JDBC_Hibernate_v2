@@ -6,16 +6,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.hql.internal.ast.QuerySyntaxException;
-import org.hibernate.query.Query;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 public class UserDaoHibernateImpl implements UserDao {
     private SessionFactory sessionFactory = new Util().getSessionFactory();
