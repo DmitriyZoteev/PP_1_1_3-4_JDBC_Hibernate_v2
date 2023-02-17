@@ -19,15 +19,8 @@ public class UserDaoJDBCImpl implements UserDao {
             e.printStackTrace();
         }
     }
-    public void rollback() {
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void createUsersTable() {
+    public void createUsersTable() throws SQLException {
         try (Statement statement = connection.createStatement();) {
             connection.setAutoCommit(false);
             statement.executeUpdate("CREATE TABLE users (id int not null primary key auto_increment, name varchar(25) not null, lastName varchar(30) not null, age int not null)");
@@ -35,12 +28,14 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Таблица с таким именем уже существует");
         } catch (SQLException e) {
-            rollback();
+            connection.rollback();
             e.printStackTrace();
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 
-    public void dropUsersTable() {
+    public void dropUsersTable() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);
             statement.executeUpdate("DROP TABLE users");
@@ -48,12 +43,14 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Удаляемая таблица отсутствует в базе данных");
         } catch (SQLException e) {
-            rollback();
+            connection.rollback();
             e.printStackTrace();
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 
-    public void saveUser(String name, String lastName, byte age) {
+    public void saveUser(String name, String lastName, byte age) throws SQLException {
         try (PreparedStatement preparedStatement
                      = connection.prepareStatement("INSERT INTO users (name, lastName, age) VALUES(?, ?, ?)")) {
             connection.setAutoCommit(false);
@@ -64,20 +61,24 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
             System.out.println("User с именем " + name + " добавлен в базу данных");
         } catch (SQLException e) {
-            rollback();
+            connection.rollback();
             e.printStackTrace();
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 
-    public void removeUserById(long id) {
+    public void removeUserById(long id) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users " + "WHERE id = ?")) {
             connection.setAutoCommit(false);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-            rollback();
+            connection.rollback();
             e.printStackTrace();
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 
@@ -99,14 +100,16 @@ public class UserDaoJDBCImpl implements UserDao {
         return list;
     }
 
-    public void cleanUsersTable() {
+    public void cleanUsersTable() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);
             statement.executeUpdate("DELETE FROM users");
             connection.commit();
         } catch (SQLException e) {
-            rollback();
+            connection.rollback();
             e.printStackTrace();
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 }
